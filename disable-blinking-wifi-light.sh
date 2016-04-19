@@ -41,13 +41,13 @@ done
 
 if test -z $module
 then
-    printf "Error: Could not detect wifi driver name."
+    printf "Error: Could not detect wifi driver name.\n"
     exit 1
 fi
 
 if ! test -f "/sys/module/$module/parameters/led_mode"
 then
-    printf "Error: driver ‘$module’ does not have ‘led_mode’ parameter."
+    printf "Error: driver ‘$module’ does not have ‘led_mode’ parameter.\n"
     exit 1
 fi
 # TODO: make it work with these as well:
@@ -68,10 +68,12 @@ then
             then
                 exit 0
             else
-                "Could not add module $module. Try rebooting to make changes."
+                printf "Could not add module $module. Try rebooting to make changes.\n"
             fi
         else
-            printf "Could not remove module $module. Try rebooting to make changes."
+            printf "Could not remove module $module. Try rebooting to make changes.\n"
             exit 1
         fi
+    fi
 fi
+

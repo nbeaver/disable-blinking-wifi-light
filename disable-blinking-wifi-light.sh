@@ -2,7 +2,7 @@
 
 if ! id | grep sudo > /dev/null
 then
-    printf "Error: you do not have sudo privileges.\n"
+    printf "Error: you do not have sudo privileges.\n" 1>&2
     exit 1
 fi
 
@@ -13,7 +13,7 @@ if ! test -d /etc/modprobe.d
 then
     if ! sudo mkdir -p '/etc/modprobe.d/'
     then
-        printf "Error: could not create directory /etc/modprobe.d/\n"
+        printf "Error: could not create directory /etc/modprobe.d/\n" 1>&2
         exit 1
     fi
 fi
@@ -24,7 +24,7 @@ if ! test -f "$config_file"
 then
     if ! sudo touch "$config_file"
     then
-        printf "Error: could not create $config_file\n"
+        printf "Error: could not create $config_file\n" 1>&2
         exit 1
     fi
 fi
@@ -41,13 +41,13 @@ done
 
 if test -z $module
 then
-    printf "Error: Could not detect wifi driver name.\n"
+    printf "Error: Could not detect wifi driver name.\n" 1>&2
     exit 1
 fi
 
 if ! test -f "/sys/module/$module/parameters/led_mode"
 then
-    printf "Error: driver ‘$module’ does not have ‘led_mode’ parameter.\n"
+    printf "Error: driver ‘$module’ does not have ‘led_mode’ parameter.\n" 1>&2
     exit 1
 fi
 # TODO: make it work with these as well:
@@ -59,7 +59,7 @@ if ! test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
 then
     if ! sudo cp 'iwled.conf' "$config_file"
     then
-        printf "Error: could not write to $config_file\n"
+        printf "Error: could not write to $config_file\n" 1>&2
         exit 1
     else
         if sudo modprobe --remove "$module"
@@ -68,10 +68,10 @@ then
             then
                 exit 0
             else
-                printf "Could not add module $module. Try rebooting to make changes.\n"
+                printf "Could not add module $module. Try rebooting to make changes.\n" 1>&2
             fi
         else
-            printf "Could not remove module $module. Try rebooting to make changes.\n"
+            printf "Could not remove module $module. Try rebooting to make changes.\n" 1>&2
             exit 1
         fi
     fi

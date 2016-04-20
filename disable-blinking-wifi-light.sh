@@ -20,13 +20,10 @@ fi
 
 config_file='/etc/modprobe.d/iwled.conf'
 
-if ! test -f "$config_file"
+if test -f "$config_file"
 then
-    if ! sudo touch "$config_file"
-    then
-        printf "Error: could not create $config_file\n" 1>&2
-        exit 1
-    fi
+    printf "Error: ‘$config_file’ already exists.\n" 1>&2
+    exit 1
 fi
 
 for i in {0..9} # it's not always wlan0

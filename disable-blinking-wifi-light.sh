@@ -64,7 +64,7 @@ fi
 
 if sudo cp 'iwled.conf' "$config_file"
 then
-    if sudo modprobe --remove "$module"
+    if sudo modprobe --remove --verbose "$module"
     then
         if sudo modprobe "$module"
         then

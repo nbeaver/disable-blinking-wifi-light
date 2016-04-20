@@ -62,7 +62,7 @@ then
     printf "Warning: led_mode is already 1 for driver ‘$module’.\n" 1>&2
 fi
 
-if cp 'iwled.conf' "$config_file"
+if sudo cp 'iwled.conf' "$config_file"
 then
     if sudo modprobe --remove "$module"
     then

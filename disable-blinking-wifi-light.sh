@@ -2,8 +2,7 @@
 
 if ! id | grep sudo > /dev/null
 then
-    printf "Error: you do not have sudo privileges.\n" 1>&2
-    exit 1
+    printf "Warning: you do not have sudo privileges.\n" 1>&2
 fi
 
 # Turn off blinking wifi light.

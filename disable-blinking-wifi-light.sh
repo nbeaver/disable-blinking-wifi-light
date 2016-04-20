@@ -62,7 +62,7 @@ fi
 # 3=Off
 if test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
 then
-    printf 'Warning: led_mode is already 1\n' 1>&2
+    printf "Warning: led_mode is already 1 for driver ‘$module’.\n" 1>&2
     exit 0
 else
     if ! sudo cp 'iwled.conf' "$config_file"

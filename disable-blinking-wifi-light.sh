@@ -62,11 +62,8 @@ then
     printf "Warning: led_mode is already 1 for driver ‘$module’.\n" 1>&2
 fi
 
-if ! cp 'iwled.conf' "$config_file"
+if cp 'iwled.conf' "$config_file"
 then
-    printf "Error: could not write to $config_file\n" 1>&2
-    exit 1
-else
     if sudo modprobe --remove "$module"
     then
         if sudo modprobe "$module"
@@ -79,4 +76,7 @@ else
         printf "Could not remove module $module. Try rebooting to make changes.\n" 1>&2
         exit 0
     fi
+else
+    printf "Error: could not write to $config_file\n" 1>&2
+    exit 1
 fi

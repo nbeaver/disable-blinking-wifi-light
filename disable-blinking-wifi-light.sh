@@ -9,7 +9,7 @@ fi
 # Turn off blinking wifi light.
 # https://askubuntu.com/questions/12069/how-to-stop-constantly-blinking-wifi-led/
 
-if ! test -d /etc/modprobe.d
+if ! test -d '/etc/modprobe.d/'
 then
     if ! sudo mkdir -p '/etc/modprobe.d/'
     then
@@ -29,7 +29,7 @@ then
     fi
 fi
 
-for i in {0..9}
+for i in {0..9} # it's not always wlan0
 do
     if test -e "/sys/class/net/wlan$i/device/driver"
     then
@@ -55,8 +55,16 @@ fi
 # options ath9k blink=0
 
 
-if ! test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
+# led_mode:
+# 0=system default
+# 1=On(RF On)/Off(RF Off)
+# 2=blinking
+# 3=Off
+if test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
 then
+    printf 'Warning: led_mode is already 1\n' 1>&2
+    exit 0
+else
     if ! sudo cp 'iwled.conf' "$config_file"
     then
         printf "Error: could not write to $config_file\n" 1>&2
@@ -76,4 +84,3 @@ then
         fi
     fi
 fi
-

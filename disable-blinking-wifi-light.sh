@@ -77,6 +77,6 @@ else
         fi
     else
         printf "Could not remove module $module. Try rebooting to make changes.\n" 1>&2
-        exit 1
+        exit 0
     fi
 fi

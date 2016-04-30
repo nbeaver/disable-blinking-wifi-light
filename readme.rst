@@ -10,7 +10,7 @@ then copies the `<iwled.conf>`_ file to ``/etc/modprobe.d/``.
 (This requires ``sudo`` permissions.)
 
 Often the wifi module cannot be reloaded on the fly `due to module dependencies`_,
-and will results in an error such as::
+and will result in an error such as::
 
     modprobe: FATAL: Module iwlwifi is in use.
 

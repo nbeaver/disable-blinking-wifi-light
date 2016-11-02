@@ -21,7 +21,7 @@ config_file='/etc/modprobe.d/iwled.conf'
 
 if test -f "$config_file"
 then
-    printf "Error: ‘$config_file’ already exists.\n" 1>&2
+    printf 'Error: "%s" already exists.\n' "${config_file}" 1>&2
     exit 1
 fi
 
@@ -37,13 +37,13 @@ done
 
 if test -z $module
 then
-    printf "Error: Could not detect wifi driver name.\n" 1>&2
+    printf 'Error: Could not detect wifi driver name.\n' 1>&2
     exit 1
 fi
 
 if ! test -f "/sys/module/$module/parameters/led_mode"
 then
-    printf "Error: driver ‘$module’ does not have ‘led_mode’ parameter.\n" 1>&2
+    printf 'Error: driver "%s" does not have "led_mode" parameter.\n' "${module}" 1>&2
     exit 1
 fi
 # TODO: make it work with these as well:
@@ -58,7 +58,7 @@ fi
 # 3=Off
 if test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
 then
-    printf "Warning: led_mode is already 1 for driver ‘$module’.\n" 1>&2
+    printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
 fi
 
 if sudo cp 'iwled.conf' "$config_file"
@@ -69,13 +69,13 @@ then
         then
             exit 0
         else
-            printf "Could not add module $module. Try rebooting to make changes.\n" 1>&2
+            printf 'Could not add module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
         fi
     else
-        printf "Could not remove module $module. Try rebooting to make changes.\n" 1>&2
+        printf 'Could not remove module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
         exit 0
     fi
 else
-    printf "Error: could not write to $config_file\n" 1>&2
+    printf 'Error: could not write to "%s"\n' "${config_file}" 1>&2
     exit 1
 fi

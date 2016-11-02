@@ -29,13 +29,13 @@ for i in {0..9} # it's not always wlan0
 do
     if test -e "/sys/class/net/wlan$i/device/driver"
     then
-        module="$(basename $(readlink /sys/class/net/wlan$i/device/driver))"
+        module="$(basename "$(readlink /sys/class/net/wlan$i/device/driver)")"
         break
     fi
 done
 
 
-if test -z $module
+if test -z "$module"
 then
     printf 'Error: Could not detect wifi driver name.\n' 1>&2
     exit 1
@@ -56,7 +56,7 @@ fi
 # 1=On(RF On)/Off(RF Off)
 # 2=blinking
 # 3=Off
-if test '1' -eq $(cat /sys/module/$module/parameters/led_mode)
+if test '1' -eq "$(cat /sys/module/$module/parameters/led_mode)"
 then
     printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
 fi

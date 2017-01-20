@@ -55,3 +55,11 @@ https://sumanta679.wordpress.com/2012/06/24/hp-elitebook-wifi-led-blinking-in-ub
     Personally I find the constantly blinking lights pretty annoying.
 
 https://alexcabal.com/stop-blinking-intel-wifi-led-on-ubuntu-karmic/
+
+-------
+License
+-------
+
+This project is licensed under the terms of the `MIT license`_.
+
+.. _MIT license: LICENSE.txt

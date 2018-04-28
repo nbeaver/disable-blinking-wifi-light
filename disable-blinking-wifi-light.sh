@@ -42,27 +42,34 @@ then
     fi
 fi
 
-config_file='/etc/modprobe.d/iwled.conf'
+TARGET='/etc/modprobe.d/iwled.conf'
+SOURCE='iwled.conf'
 
-if test -f "$config_file"
+if ! test -f "$SOURCE"
 then
-    printf 'Error: "%s" already exists.\n' "${config_file}" 1>&2
+    printf 'Error: cannot find "%s"\n' "${SOURCE}" 1>&2
     exit 1
 fi
 
-if ! sudo cp 'iwled.conf' "$config_file"
+if test -f "$TARGET"
 then
-    printf 'Error: could not write to "%s"\n' "${config_file}" 1>&2
+    printf 'Error: target "%s" already exists.\n' "${TARGET}" 1>&2
+    exit 1
+fi
+
+if ! sudo cp -- "$SOURCE" "$TARGET"
+then
+    printf "Error: could not copy'%s' to '%s'\n" "$SOURCE" "${TARGET}" >&2
     exit 1
 fi
 
 if ! sudo modprobe --remove --verbose "$module"
 then
-    printf 'Could not remove module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
+    printf 'Warning: Could not remove module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
     exit 0
 fi
 
 if ! sudo modprobe "$module"
 then
-    printf 'Could not add module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
+    printf 'Warning: Could not add module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
 fi

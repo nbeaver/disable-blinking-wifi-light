@@ -31,6 +31,8 @@ do
     then
         printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
     fi
+    # Work with the first module we find.
+    break
 done
 
 if ! test -d '/etc/modprobe.d/'

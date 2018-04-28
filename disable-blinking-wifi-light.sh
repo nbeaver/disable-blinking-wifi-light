@@ -8,23 +8,6 @@ fi
 # Turn off blinking wifi light.
 # https://askubuntu.com/questions/12069/how-to-stop-constantly-blinking-wifi-led/
 
-if ! test -d '/etc/modprobe.d/'
-then
-    if ! sudo mkdir -p '/etc/modprobe.d/'
-    then
-        printf "Error: could not create directory /etc/modprobe.d/\n" 1>&2
-        exit 1
-    fi
-fi
-
-config_file='/etc/modprobe.d/iwled.conf'
-
-if test -f "$config_file"
-then
-    printf 'Error: "%s" already exists.\n' "${config_file}" 1>&2
-    exit 1
-fi
-
 # TODO: make it work with these as well:
 # options ipw2200 led=0
 # options ath9k blink=0
@@ -49,6 +32,23 @@ do
         printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
     fi
 done
+
+if ! test -d '/etc/modprobe.d/'
+then
+    if ! sudo mkdir -p '/etc/modprobe.d/'
+    then
+        printf "Error: could not create directory /etc/modprobe.d/\n" 1>&2
+        exit 1
+    fi
+fi
+
+config_file='/etc/modprobe.d/iwled.conf'
+
+if test -f "$config_file"
+then
+    printf 'Error: "%s" already exists.\n' "${config_file}" 1>&2
+    exit 1
+fi
 
 if ! sudo cp 'iwled.conf' "$config_file"
 then

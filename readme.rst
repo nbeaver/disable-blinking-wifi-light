@@ -5,7 +5,7 @@ Disable blinking WiFi LED
 This is a script to make the wifi LED on Intel cards stay lit when enabled
 instead of the default behavior of blinking.
 
-It checks that the enabled wifi driver suppports the ``led_mode`` parameter,
+It checks that the enabled wifi driver supports the ``led_mode`` parameter,
 then copies the `<iwled.conf>`_ file to ``/etc/modprobe.d/``.
 (This requires ``sudo`` permissions.)
 

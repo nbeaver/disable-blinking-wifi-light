@@ -25,57 +25,44 @@ then
     exit 1
 fi
 
-for i in {0..9} # it's not always wlan0
-do
-    if test -e "/sys/class/net/wlan$i/device/driver"
-    then
-        module="$(basename "$(readlink /sys/class/net/wlan$i/device/driver)")"
-        break
-    fi
-done
-
-
-if test -z "$module"
-then
-    printf 'Error: Could not detect wifi driver name.\n' 1>&2
-    exit 1
-fi
-
-if ! test -f "/sys/module/$module/parameters/led_mode"
-then
-    printf 'Error: driver "%s" does not have "led_mode" parameter.\n' "${module}" 1>&2
-    exit 1
-fi
 # TODO: make it work with these as well:
 # options ipw2200 led=0
 # options ath9k blink=0
-
 
 # led_mode:
 # 0=system default
 # 1=On(RF On)/Off(RF Off)
 # 2=blinking
 # 3=Off
-if test '1' -eq "$(cat /sys/module/$module/parameters/led_mode)"
-then
-    printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
-fi
 
-if sudo cp 'iwled.conf' "$config_file"
-then
-    if sudo modprobe --remove --verbose "$module"
+wifi_modules=( iwlwifi iwlegacy iwl-legacy iwlagn iwlcore )
+for module in "${wifi_modules[@]}"
+do
+    if ! test -d "/sys/module/$module"
     then
-        if sudo modprobe "$module"
-        then
-            exit 0
-        else
-            printf 'Could not add module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
-        fi
-    else
-        printf 'Could not remove module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
-        exit 0
+        # Module not loaded, so skip it.
+        continue
     fi
-else
+    printf "Found module '%s'\n" "$module" >&2
+    if test '1' -eq "$(cat /sys/module/$module/parameters/led_mode)"
+    then
+        printf 'Warning: led_mode is already 1 for driver "%s".\n' "${module}" 1>&2
+    fi
+done
+
+if ! sudo cp 'iwled.conf' "$config_file"
+then
     printf 'Error: could not write to "%s"\n' "${config_file}" 1>&2
     exit 1
+fi
+
+if ! sudo modprobe --remove --verbose "$module"
+then
+    printf 'Could not remove module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
+    exit 0
+fi
+
+if ! sudo modprobe "$module"
+then
+    printf 'Could not add module "%s". Try rebooting to make changes.\n' "${module}" 1>&2
 fi
